@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!--meta tags-->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <title>CorePocket-Events</title>
+    <!-- favicon -->
+    <!--<link rel="shortcut icon" href="../../App_Themes/Default/images/favicon.ico" type="image/x-icon">-->
+
+    <link href="../../App_Themes/Default/css/kendo.common.min.css" rel="stylesheet" />
+    <link href="../../App_Themes/Default/css/kendo.default.min.css" rel="stylesheet" />
+    <link href="../../App_Themes/Default/css/fonts.css" rel="stylesheet" />
+    <link href="../../App_Themes/Default/css/styleguide.css" rel="stylesheet" />
+    <link href="../../App_Themes/Default/css/casepoint.comfortable.css" rel="stylesheet" />
+    <link href="../../App_Themes/Default/css/kendo.Deeppurple.css" rel="stylesheet" />
+
+    <!-- css -->
+    <link href="../../App_Themes/Default/css/core-pocket.css" rel="stylesheet" />
+    <link href="../../App_Themes/Default/css/core-pocket-responsive.css" rel="stylesheet" />
+
+</head>
+
+<body>
+    <div class="mt-container mt-container-fluid h100 pl-20 pr-20">
+        <section id="main_splitter" class="k-spliter h100">
+            <div class="center-pane h100 event-pane-wrapper">
+                <header class="grid-header">
+                    <h5 class="title text-primary display-block">Transaction</h5>
+                    <div class="searchbar d-flex align-items-center mb-0">
+                        <div class="input-search">
+                            <i class="icon-search" data-ara-title="Search" aria-hidden="true"
+                                data-role="aratooltipv2"></i>
+                            <input type="text" name="search" class="form-control k-textbox" placeholder="Search here..."
+                                aria-label="Search" autocomplete="off">
+                        </div>
+
+                        <div class="action-div dropdown">
+                            <a class="btn btn-raised btn-primary btn-block action-btn"><i
+                                    class="icon-action"></i><span>Action</span><span class="caret"></span></a>
+                            <ul class="dropdown-menu right">
+                                <li><a href="javascript:void(0)" id="addEventLink" onclick="openAddEventPopup();"><i
+                                            class="icon-plus"></i><span>Add
+                                            Express</span></a></li>
+
+                                <li class="divider"></li>
+                                <li><a><i class="icon-delete text-danger"></i><span
+                                            class="text-danger">Delete</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </header>
+                <div class="action-header d-flex mb-10">
+                    <div class="action-checkbox ml-10">
+                        <input type="checkbox" class="k-checkbox" id="checkAll101">
+                        <label class="k-checkbox-label" for="checkAll101">All</label>
+                    </div>
+                </div>
+                <div class="view-wrapper">
+                    <div class="grid-wrapper h100" id="list_view_content">
+                        <div id="transGrid" class="mb-0"></div>
+                        <div id="transGrid_pager" class="with-more-option">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- add express window -->
+    <div id="addExpress" style="display: none;">
+        <div class="window-wrapper">
+            <div class="form-group">
+                <label for="event">Event</label>
+                <select id="event">
+                    <option>CP Annual</option>
+                    <option>CP ARA</option>
+                </select>
+            </div>
+            <div class="d-flex">
+                <div class="col-width-50 pl-0">
+                    <div class="form-group">
+                        <label for="Category">Category</label>
+                        <select id="Category">
+                            <option>Car</option>
+                            <option>Bus</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-width-50 pr-0">
+                    <div class="form-group amount-group">
+                        <label for="Amount">Amount</label>
+                        <span class="am-icon">&#8377</span>
+                        <input type="text" class="form-control am-control" id="Amount" value="2000">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="ExpenseDate">Expense Date</label>
+                <input type="text" class="form-control datetimepicker" id="ExpenseDate">
+            </div>
+            <div class="form-group">
+                <label for="textArea">Description</label>
+                <textarea id="textArea" class="form-control k-textbox" rows="5"
+                    aria-label="textarea">Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print,</textarea>
+            </div>
+        </div>
+        <div class="window-footer dir-rtl">
+            <button class="btn btn-primary">Add</button>
+            <button class="btn btn-trans">Close</button>
+        </div>
+    </div>
+    <!-- add express window -->
+    <!-- option menu -->
+    <ul id="popup" class="grid-options" style="display: none;">
+        <li class="goto">
+            <span class="text-muted">Go to page</span>
+            <span>
+                <input type="text" id="page_goto" class="form-control" />
+            </span>
+            <span class="text-muted">0</span>
+            <span class="text-muted">pages</span>
+        </li>
+        <li class="rpp">
+            <span class="text-muted">Record per page</span>
+            <select class="k-dropdown" id="pagerDropdown">
+                <option>5</option>
+                <option>10</option>
+                <option>15</option>
+                <option>20</option>
+                <option>50</option>
+                <option>100</option>
+                <option>200</option>
+            </select>
+        </li>
+    </ul>
+    <!-- option menu -->
+
+
+
+    <!-- scripts -->
+    <script src="../../Scripts/Kendo/jquery.min.js"></script>
+    <script src="../../Scripts/Kendo/kendo.all.min.js"></script>
+    <script src="../../Scripts/CLARENT/Other/Custom/Custom.js"></script>
+    <script>
+        $(document).ready(function () {
+            // hide userprofile 
+            $(document).click(function () {
+                window.top.$('body').find('.userprofile-menu').removeClass('open');
+                window.top.$('body').find('.userprofile').removeClass('active open');
+            });
+
+            // common select dropdown
+            $("select:not([multiple])").kendoDropDownList();
+
+
+            var dataSource = new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        url: "https://demos.telerik.com/kendo-ui/service/Products",
+                        dataType: "jsonp"
+                    }
+                },
+            });
+
+
+            $("#transGrid").kendoGrid({
+                dataSource: {
+                    type: "odata",
+                    transport: {
+                        read: "https://demos.telerik.com/kendo-ui/service/Northwind.svc/Customers"
+                    },
+                    pageSize: 4
+                },
+                resizable: true,
+                sortable: true,
+                pageable: false,
+                persistSelection: true,
+                columns: [{ selectable: true, width: "40px" },
+                {
+                    template: "<div class='grid-action'><a class='text-muted'><i class='icon-edit1'></i></a><a class='text-danger delete-btn'><i class='icon-delete'></i></a></div>",
+                    field: "Action",
+                    title: "Action",
+                    width: 80
+                },
+                {
+                    template: 'CP Annual',
+                    field: "eventname",
+                    title: "event name"
+                }, {
+                    template: 'Car',
+                    field: "Category",
+                    title: "Category",
+                }, {
+                    template: '&\\\#8377 2000',
+                    field: "Amount",
+                    title: "Amount",
+                }, {
+                    template: '15/03/2021',
+                    field: "date",
+                    title: "Date",
+                }, {
+                    template: 'Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print,',
+                    field: "description",
+                    title: "description",
+                }]
+            });
+            // pager
+
+            var dataSource = new kendo.data.DataSource({
+                data: [
+                    { productName: "Tea", category: "Beverages" },
+                    { productName: "Coffee", category: "Beverages" },
+                    { productName: "Ham", category: "Food" },
+                    { productName: "Bread", category: "Food" }
+                ],
+                pageSize: 2
+            });
+            $("#transGrid_pager").kendoPager({
+                dataSource: dataSource,
+            });
+            dataSource.read();
+
+            $("#transGrid_pager")
+                .append("<div class='more-oprion'><span class='separator'></span><a href='javascript:void(0)' id='moreOption' class='text-muted btn-default-hover'><i class='icon-option'></i></a></div>");
+
+
+            //Contextmenu popover left click for grid pager
+            var popup = $("#popup").kendoPopup({
+                animation: false,
+                anchor: $("#moreOption"),
+                origin: "top right",
+                position: "bottom right",
+                collision: "fit",
+
+            }).data("kendoPopup");
+
+            $("#moreOption").click(function () {
+                $("#popup").data("kendoPopup").open()
+            });
+
+            $("#pagerDropdown").kendoDropDownList({
+                popup: {
+                    appendTo: 'body'
+                }
+            });
+
+            $("#addExpress").kendoWindow({
+                animation: false,
+                width: '600px',
+                height: '480px',
+                visible: false,
+                draggable: false,
+                resizable: false,
+                title: "Add Express",
+                actions: [
+                    "Close"
+                ],
+                modal: true,
+
+            }).data("kendoWindow");
+
+            $(".datetimepicker").kendoDateTimePicker({
+                value: new Date()
+            });
+
+
+
+        });
+
+
+        function openAddEventPopup() {
+            $("#addExpress").data("kendoWindow").center().open();
+        }
+    </script>
+</body>
+
+</html>
